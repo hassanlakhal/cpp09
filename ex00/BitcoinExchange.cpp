@@ -6,13 +6,13 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/18 20:46:43 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/19 11:52:07 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"BitcoinExchange.hpp"
             
-BitcoinExchange::BitcoinExchange(std::string& nameFile) : nameFile(nameFile)
+BitcoinExchange::BitcoinExchange(const std::string& nameFile) : nameFile(nameFile)
 {
     
 }
@@ -31,20 +31,29 @@ std::string BitcoinExchange::getFile(std::string name)
 
 void BitcoinExchange::loadBitcoinDatabase()
 {
-    
-    std::string dataBase = this->getFile(this->nameFile);
-    std::istringstream my_file(dataBase);
-    std::string temp;
-    float key;
-    std::string value;
-    while(std::getline(my_file,temp,"|"))
+    std::ifstream file(this->nameFile.c_str());
+    if (!file.is_open()) 
     {
-        std::istringstream pairStream(temp);
-        float key;
-        std::string value;
-        std::getline();
+        std::cerr << "Error: could not open file." << std::endl;
+        return;
+    }
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::istringstream pairStream(line);
+        std::string key, value;
+
+        if (std::getline(pairStream, key, ',') && std::getline(pairStream, value))
+        {
+            if (!key.empty() && !value.empty())
+            {
+                double result = std::strtod(value.c_str(), NULL);
+                data[key] = result;
+            }
+        }
     }
 }
+
 
 BitcoinExchange::~BitcoinExchange()
 {
