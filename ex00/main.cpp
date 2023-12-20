@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:35 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/19 11:49:33 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 00:36:09 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int main(int ac, char *av[])
 {    
     if (ac == 2)
     {
-        BitcoinExchange obj("data.csv");
+        BitcoinExchange obj(av[1]);
         obj.loadBitcoinDatabase();
         // std::cout <<  obj.getFile() << std::endl; 
     }

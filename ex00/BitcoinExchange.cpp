@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/20 23:49:12 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 00:37:37 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,20 @@ void BitcoinExchange::loadBitcoinDatabase()
             if (!key.empty() && !value.empty())
             {
                 double result = std::strtod(value.c_str(), NULL);
-                data[key] = result;
+                data.insert(std::pair<std::string, double>(key,result));
             }
         }
     }
+    // std::multimap<std::string, double>::iterator it;
+    // it = data.begin();
+    // while (it != data.end())
+    // {
+    //     std::cout << it->first << "\t" << it->second << std::endl;
+    //     it++;
+    // }
+    
 }
+
 void BitcoinExchange::processInputLine()
 {
     
