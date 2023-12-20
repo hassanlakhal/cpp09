@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/19 11:52:07 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/20 23:49:12 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ std::string BitcoinExchange::getFile(std::string name)
     {
         data.append(line + "\n");
     }
-    return data;   
+    return data;
 }
 
 void BitcoinExchange::loadBitcoinDatabase()
@@ -42,7 +42,6 @@ void BitcoinExchange::loadBitcoinDatabase()
     {
         std::istringstream pairStream(line);
         std::string key, value;
-
         if (std::getline(pairStream, key, ',') && std::getline(pairStream, value))
         {
             if (!key.empty() && !value.empty())
@@ -53,8 +52,10 @@ void BitcoinExchange::loadBitcoinDatabase()
         }
     }
 }
-
-
+void BitcoinExchange::processInputLine()
+{
+    
+}
 BitcoinExchange::~BitcoinExchange()
 {
 }
