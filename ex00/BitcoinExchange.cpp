@@ -6,13 +6,13 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 00:37:37 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 01:00:32 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"BitcoinExchange.hpp"
             
-BitcoinExchange::BitcoinExchange(const std::string& nameFile) : nameFile(nameFile)
+BitcoinExchange::BitcoinExchange(const std::string& nameFile, char c) : nameFile(nameFile), c(c) 
 {
     
 }
@@ -42,7 +42,7 @@ void BitcoinExchange::loadBitcoinDatabase()
     {
         std::istringstream pairStream(line);
         std::string key, value;
-        if (std::getline(pairStream, key, ',') && std::getline(pairStream, value))
+        if (std::getline(pairStream, key, this->c) && std::getline(pairStream, value))
         {
             if (!key.empty() && !value.empty())
             {
