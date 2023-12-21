@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 01:00:32 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 03:22:11 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void BitcoinExchange::loadBitcoinDatabase()
                 double result = std::strtod(value.c_str(), NULL);
                 data.insert(std::pair<std::string, double>(key,result));
             }
+            else
+                std::cout << "error empty" << std::endl;
         }
     }
     // std::multimap<std::string, double>::iterator it;
@@ -61,9 +63,43 @@ void BitcoinExchange::loadBitcoinDatabase()
     
 }
 
+void BitcoinExchange::checkFormDate(const std::string& date)
+{
+    std::string year , month ,day;
+    static int cont;
+    for (size_t i = 0; i < date.length(); i++)
+    {
+        if (date[i] == '-')
+        {
+            switch (i)
+            {
+                case 4:
+                    year = date.substr(0,i);
+                    month = date.substr(i + 1,2);
+                    break;
+                case 7:
+                    day = date.substr(i + 1,2);
+                    break; 
+                default:
+                    break;
+            }
+            i++;
+        }
+        i++;
+    }
+    std::cout << "date : " << year << "\t" << month << "\t" << day << std::endl;
+}
+
 void BitcoinExchange::processInputLine()
 {
-    
+    std::multimap<std::string, double>::iterator it;
+    it = data.begin();
+    while (it != data.end())
+    {
+        checkFormDate(it->first);
+        // std::cout << it->first << "\t" << it->second << std::endl;
+        it++;
+    }
 }
 BitcoinExchange::~BitcoinExchange()
 {

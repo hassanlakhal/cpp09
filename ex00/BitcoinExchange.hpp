@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 00:57:29 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 01:23:57 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class BitcoinExchange
         ~BitcoinExchange();
         std::string getFile(std::string name);
         void loadBitcoinDatabase();
+        void checkFormDate(const std::string& date);
         void processInputLine();
 };
 
