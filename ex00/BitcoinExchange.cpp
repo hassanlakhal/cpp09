@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 06:22:05 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 07:02:00 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,26 +75,39 @@ int BitcoinExchange::stringToInt(const char *str)
 void BitcoinExchange::checkFormDate(const std::string& date)
 {
     std::string year , month ,day;
-    static int cont;
     int dateForm[3];
-    bool indx = false;
     for (size_t i = 0; i < date.length(); i++)
     {
-      
         if (date[i] == '-')
         { 
-             
-            switch (i)
+            if(i + 2 <  date.length() && date[i + 2] == '-')
             {
-                case 4:
-                    year = date.substr(0,i);
-                    month = date.substr(i + 1,2);
-                    break;
-                case 7:
-                    day = date.substr(i + 1,(date.length() - 1) - i);
-                    break; 
-                default:
-                    break;
+                // std::cout << i << "\t"<< date << std::endl;
+                switch (i)
+                {
+                    case 4:
+                        year = date.substr(0,i);
+                        month = date.substr(i + 1,1);
+                        day = date.substr(i + 3,(date.length() - 1) - i);
+                        break; 
+                    default:
+                        break;
+                }
+            }
+            else
+            { 
+                switch (i)
+                {
+                    case 4:
+                        year = date.substr(0,i);
+                        month = date.substr(i + 1,2);
+                        break;
+                    case 7:
+                        day = date.substr(i + 1,(date.length() - 1) - i);
+                        break; 
+                    default:
+                        break;
+                }
             }
             i++;
         }
@@ -105,8 +118,10 @@ void BitcoinExchange::checkFormDate(const std::string& date)
     dateForm[2] = stringToInt(day.c_str());
     for (size_t i = 0; i < 3; i++)
     {
+        // std::cout << i << "\t"<< dateForm[i] << std::endl;
         switch (i)
         {
+            
             case 0:
                 if (dateForm[i] < 2009)
                 {
