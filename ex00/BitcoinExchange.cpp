@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 07:02:00 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 22:11:52 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ void BitcoinExchange::checkFormDate(const std::string& date)
         // std::cout << i << "\t"<< dateForm[i] << std::endl;
         switch (i)
         {
-            
             case 0:
                 if (dateForm[i] < 2009)
                 {
@@ -174,13 +173,24 @@ std::string BitcoinExchange::trim(const std::string& str)
 
 void BitcoinExchange::processInputLine()
 {
-    std::multimap<std::string, double>::iterator it;
-    it = data.begin();
-    while (it != data.end())
+    std::ifstream fileData;
+    fileData.open("input.txt");
+    std::string data ,line; 
+    while (std::getline(fileData,line))
     {
-        std::string date = trim(it->first);
-        checkFormDate(date);
-        it++;
+        std::istringstream pairStream(line);
+        std::string key, value;
+        if (std::getline(pairStream, key, '|') && std::getline(pairStream, value))
+        {
+            key = trim(key);
+            value = trim(value);
+        }
+        else
+        {
+            key = trim(line);
+            value = trim("");
+        }
+        checkFormDate(key);
     }
 }
 BitcoinExchange::~BitcoinExchange()
