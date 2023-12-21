@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 22:11:52 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/22 00:02:55 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void BitcoinExchange::loadBitcoinDatabase()
         if (std::getline(pairStream, key, this->c) && std::getline(pairStream, value))
         {
             double result = std::strtod(value.c_str(), NULL);
-            // std::cout << result << "\t" << key << std::endl;
             data.insert(std::pair<std::string, double>(key,result));
         }
         else
@@ -65,9 +64,7 @@ int BitcoinExchange::stringToInt(const char *str)
 {
     char *endPtr;
     long res = strtol(str,&endPtr,10);
-    if (endPtr[0] && endPtr[0] != '\n')
-        return 0;
-    if (res > INT_MAX || res < INT_MIN)
+    if (endPtr[0])
         return 0;
     return static_cast<int>(res);
 }
@@ -76,49 +73,26 @@ void BitcoinExchange::checkFormDate(const std::string& date)
 {
     std::string year , month ,day;
     int dateForm[3];
-    for (size_t i = 0; i < date.length(); i++)
+    int moths[4] = {4,6,9,11};
+    if (date.length() > 10)
     {
-        if (date[i] == '-')
-        { 
-            if(i + 2 <  date.length() && date[i + 2] == '-')
-            {
-                // std::cout << i << "\t"<< date << std::endl;
-                switch (i)
-                {
-                    case 4:
-                        year = date.substr(0,i);
-                        month = date.substr(i + 1,1);
-                        day = date.substr(i + 3,(date.length() - 1) - i);
-                        break; 
-                    default:
-                        break;
-                }
-            }
-            else
-            { 
-                switch (i)
-                {
-                    case 4:
-                        year = date.substr(0,i);
-                        month = date.substr(i + 1,2);
-                        break;
-                    case 7:
-                        day = date.substr(i + 1,(date.length() - 1) - i);
-                        break; 
-                    default:
-                        break;
-                }
-            }
-            i++;
-        }
-        i++;
+        std::cout << "Error : bad input => " << date <<  std::endl;
+        return ;
+    }
+    std::istringstream pairStream(date);
+    std::getline(pairStream,year,'-');
+    std::getline(pairStream,month,'-');
+    pairStream >> day;
+    if (year.length() != 4 || month.length() != 2 || day.length() != 2)
+    {
+        std::cout << "Error : bad input => " << date <<  std::endl;
+        return ;
     }
     dateForm[0] = stringToInt(year.c_str());
     dateForm[1] = stringToInt(month.c_str());
     dateForm[2] = stringToInt(day.c_str());
     for (size_t i = 0; i < 3; i++)
     {
-        // std::cout << i << "\t"<< dateForm[i] << std::endl;
         switch (i)
         {
             case 0:
@@ -147,10 +121,15 @@ void BitcoinExchange::checkFormDate(const std::string& date)
                     else if (!leap_year && (dateForm[i] < 1 || dateForm[i] > 28))
                     {
                         std::cout << "Error: Bad input for day in non-leap year => " << date <<  std::endl;
-                         return ;
+                        return ;
                     }
                 }
-                else if ((dateForm[i] < 1 || dateForm[i] > 31) )
+                else if ((dateForm[i] < 1 || dateForm[i] > 31))
+                {
+                    std::cout << "Error : bad input => " << date <<  std::endl;
+                    return ;
+                }
+                else if (((dateForm[i] < 1 || dateForm[i] > 30)) && std::find(std::begin(moths),std::end(moths),dateForm[i - 1]) != std::end(moths))
                 {
                     std::cout << "Error : bad input => " << date <<  std::endl;
                     return ;
@@ -175,7 +154,8 @@ void BitcoinExchange::processInputLine()
 {
     std::ifstream fileData;
     fileData.open("input.txt");
-    std::string data ,line; 
+    std::string data ,line;
+    double result;
     while (std::getline(fileData,line))
     {
         std::istringstream pairStream(line);
@@ -184,12 +164,15 @@ void BitcoinExchange::processInputLine()
         {
             key = trim(key);
             value = trim(value);
+            char *endPtr;
+            double res = strtod(value.c_str(),&endPtr);
         }
         else
         {
             key = trim(line);
-            value = trim("");
-        }
+            value = "none";
+           
+        } 
         checkFormDate(key);
     }
 }

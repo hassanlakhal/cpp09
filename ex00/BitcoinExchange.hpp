@@ -6,15 +6,17 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 06:12:52 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 23:53:20 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include<iostream>
-#include<map>
-#include<fstream>
+#include <iostream>
+#include <map>
+#include <fstream>
 #include <sstream>
-#include<string>
+#include <string>
+#include <iterator>
+#include <cstdlib>
 
 
 class BitcoinExchange
