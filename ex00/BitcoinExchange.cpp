@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 03:43:43 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 06:22:05 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,12 @@ void BitcoinExchange::loadBitcoinDatabase()
         std::string key, value;
         if (std::getline(pairStream, key, this->c) && std::getline(pairStream, value))
         {
-            // if (!key.empty() && !value.empty())
-            // {
-                double result = std::strtod(value.c_str(), NULL);
-                data.insert(std::pair<std::string, double>(key,result));
-            // }
-            // else
-            //     std::cout << "error empty" << std::endl;
+            double result = std::strtod(value.c_str(), NULL);
+            // std::cout << result << "\t" << key << std::endl;
+            data.insert(std::pair<std::string, double>(key,result));
         }
+        else
+            data.insert(std::pair<std::string, double>(key,-1));
     }
     // std::multimap<std::string, double>::iterator it;
     // it = data.begin();
@@ -63,15 +61,29 @@ void BitcoinExchange::loadBitcoinDatabase()
     
 }
 
+int BitcoinExchange::stringToInt(const char *str)
+{
+    char *endPtr;
+    long res = strtol(str,&endPtr,10);
+    if (endPtr[0] && endPtr[0] != '\n')
+        return 0;
+    if (res > INT_MAX || res < INT_MIN)
+        return 0;
+    return static_cast<int>(res);
+}
+
 void BitcoinExchange::checkFormDate(const std::string& date)
 {
     std::string year , month ,day;
     static int cont;
     int dateForm[3];
+    bool indx = false;
     for (size_t i = 0; i < date.length(); i++)
     {
+      
         if (date[i] == '-')
-        {
+        { 
+             
             switch (i)
             {
                 case 4:
@@ -79,7 +91,7 @@ void BitcoinExchange::checkFormDate(const std::string& date)
                     month = date.substr(i + 1,2);
                     break;
                 case 7:
-                    day = date.substr(i + 1,2);
+                    day = date.substr(i + 1,(date.length() - 1) - i);
                     break; 
                 default:
                     break;
@@ -88,9 +100,9 @@ void BitcoinExchange::checkFormDate(const std::string& date)
         }
         i++;
     }
-    dateForm[0] = std::atoi(year.c_str());
-    dateForm[1] = std::atoi(month.c_str());
-    dateForm[2] = std::atoi(day.c_str());
+    dateForm[0] = stringToInt(year.c_str());
+    dateForm[1] = stringToInt(month.c_str());
+    dateForm[2] = stringToInt(day.c_str());
     for (size_t i = 0; i < 3; i++)
     {
         switch (i)
@@ -99,26 +111,50 @@ void BitcoinExchange::checkFormDate(const std::string& date)
                 if (dateForm[i] < 2009)
                 {
                     std::cout << "Error : bad input => " << date <<  std::endl;
+                    return ;
                 }
                 break;
             case 1:
-                if (dateForm[i])
+                if ((dateForm[i] < 1 || dateForm[i] > 12))
                 {
-                    
+                    std::cout << "Error : bad input => " << date <<  std::endl;
+                    return ;
                 }
                 break;
             case 2:
-                if (dateForm[i])
+                if (dateForm[1] == 2)
                 {
-                    
+                    bool leap_year = ((dateForm[0] % 4 == 0 && dateForm[0] % 100 != 0) || dateForm[0] % 400 == 0);
+                    if(leap_year && (dateForm[i] < 1 || dateForm[i] > 29))
+                    {
+                         std::cout << "Error: Bad input for day in leap year =>" << date <<  std::endl;
+                         return ;
+                    }
+                    else if (!leap_year && (dateForm[i] < 1 || dateForm[i] > 28))
+                    {
+                        std::cout << "Error: Bad input for day in non-leap year => " << date <<  std::endl;
+                         return ;
+                    }
+                }
+                else if ((dateForm[i] < 1 || dateForm[i] > 31) )
+                {
+                    std::cout << "Error : bad input => " << date <<  std::endl;
+                    return ;
                 }
                 break;
             default:
                 break;
         }
     }
-    
-    std::cout << "date : " << year << "\t" << month << "\t" << day << std::endl;
+}
+
+std::string BitcoinExchange::trim(const std::string& str)
+{
+    size_t begin = str.find_first_not_of(" ");
+    if (begin == std::string::npos)
+        return str;
+    size_t end =  str.find_last_not_of(" ");
+    return str.substr(begin, end - begin + 1);
 }
 
 void BitcoinExchange::processInputLine()
@@ -127,8 +163,8 @@ void BitcoinExchange::processInputLine()
     it = data.begin();
     while (it != data.end())
     {
-        checkFormDate(it->first);
-        // std::cout << it->first << "\t" << it->second << std::endl;
+        std::string date = trim(it->first);
+        checkFormDate(date);
         it++;
     }
 }

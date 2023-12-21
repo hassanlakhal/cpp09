@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 01:23:57 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 06:12:52 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include<map>
 #include<fstream>
 #include <sstream>
+#include<string>
 
 
 class BitcoinExchange
@@ -28,6 +29,8 @@ class BitcoinExchange
         std::string getFile(std::string name);
         void loadBitcoinDatabase();
         void checkFormDate(const std::string& date);
+        int stringToInt(const char* str);
+        std::string trim(const std::string& str);
         void processInputLine();
 };
 
