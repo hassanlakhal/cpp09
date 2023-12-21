@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 03:22:11 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/21 03:43:43 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ void BitcoinExchange::loadBitcoinDatabase()
         std::string key, value;
         if (std::getline(pairStream, key, this->c) && std::getline(pairStream, value))
         {
-            if (!key.empty() && !value.empty())
-            {
+            // if (!key.empty() && !value.empty())
+            // {
                 double result = std::strtod(value.c_str(), NULL);
                 data.insert(std::pair<std::string, double>(key,result));
-            }
-            else
-                std::cout << "error empty" << std::endl;
+            // }
+            // else
+            //     std::cout << "error empty" << std::endl;
         }
     }
     // std::multimap<std::string, double>::iterator it;
@@ -67,6 +67,7 @@ void BitcoinExchange::checkFormDate(const std::string& date)
 {
     std::string year , month ,day;
     static int cont;
+    int dateForm[3];
     for (size_t i = 0; i < date.length(); i++)
     {
         if (date[i] == '-')
@@ -87,6 +88,36 @@ void BitcoinExchange::checkFormDate(const std::string& date)
         }
         i++;
     }
+    dateForm[0] = std::atoi(year.c_str());
+    dateForm[1] = std::atoi(month.c_str());
+    dateForm[2] = std::atoi(day.c_str());
+    for (size_t i = 0; i < 3; i++)
+    {
+        switch (i)
+        {
+            case 0:
+                if (dateForm[i] < 2009)
+                {
+                    std::cout << "Error : bad input => " << date <<  std::endl;
+                }
+                break;
+            case 1:
+                if (dateForm[i])
+                {
+                    
+                }
+                break;
+            case 2:
+                if (dateForm[i])
+                {
+                    
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    
     std::cout << "date : " << year << "\t" << month << "\t" << day << std::endl;
 }
 
