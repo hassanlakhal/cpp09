@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/22 00:02:55 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/22 09:25:29 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,11 @@ std::string BitcoinExchange::trim(const std::string& str)
     return str.substr(begin, end - begin + 1);
 }
 
+bool areEqual(double a, double b, double epsilon = 1e-10)
+{
+    return std::abs(a - b) < epsilon;
+}
+
 void BitcoinExchange::processInputLine()
 {
     std::ifstream fileData;
@@ -165,6 +170,9 @@ void BitcoinExchange::processInputLine()
             key = trim(key);
             value = trim(value);
             char *endPtr;
+            std::istringstream ss(value);
+            long nbr;
+            ss >> nbr;
             double res = strtod(value.c_str(),&endPtr);
         }
         else

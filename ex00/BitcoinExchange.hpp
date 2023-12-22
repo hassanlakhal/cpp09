@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/21 23:53:20 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/22 08:40:40 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <string>
 #include <iterator>
 #include <cstdlib>
+#include <cmath>
 
 
 class BitcoinExchange
