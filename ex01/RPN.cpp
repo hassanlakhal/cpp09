@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/29 14:39:19 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/29 17:32:53 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/29 21:27:34 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,6 @@ void RPN::evaluateRPN(std::string& strArg)
             int digit = atoi(number.c_str());
             rpnList.push(digit);
         }
-        else if (number.length() == 2 && number[0] == '-' && isdigit(number[1]))
-        {
-            int digit = atoi(number.c_str());
-            rpnList.push(digit);
-        }
         else if (number.length() == 1 && std::find(std::begin(operationsToken),std::end(operationsToken),number[0]) != std::end(operationsToken))
         {
             if (rpnList.size() < 2)
@@ -78,6 +73,8 @@ void RPN::evaluateRPN(std::string& strArg)
             int result =  performOperation(number2,number1,number[0]);
             rpnList.push(result);
         }
+        else
+            throw std::invalid_argument(" Error ");
         it++;
     }
     std::cout << rpnList.top() << std::endl;
