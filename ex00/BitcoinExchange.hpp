@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/29 12:23:30 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/29 12:48:14 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class BitcoinExchange
         bool checkFormDate(const std::string& date);
         int stringToInt(const char* str);
         std::string trim(const std::string& str);
-        void processInputLine();
+        void processInputLine(std::string& nameFile);
         void checkExchangeRate(std::string& value, std::string& key);
         double getExchangeRate(std::string& strDate) const;
 };

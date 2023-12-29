@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/29 12:34:40 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/29 12:48:25 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,12 +183,11 @@ std::string BitcoinExchange::trim(const std::string& str)
     return str.substr(begin, end - begin + 1);
 }
 
-void BitcoinExchange::processInputLine()
+void BitcoinExchange::processInputLine(std::string& nameFile)
 {
     std::ifstream fileData;
-    fileData.open("input.txt");
+    fileData.open(nameFile);
     std::string data ,line;
-    double result;
     while (std::getline(fileData,line))
     {
         std::istringstream pairStream(line);
