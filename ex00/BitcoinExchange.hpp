@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:32 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/22 08:40:40 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/29 12:23:30 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ class BitcoinExchange
     public:
         BitcoinExchange(const std::string& nameFile, char c);
         ~BitcoinExchange();
-        std::string getFile(std::string name);
+        std::string getFile(std::string& name);
         void loadBitcoinDatabase();
-        void checkFormDate(const std::string& date);
+        bool checkFormDate(const std::string& date);
         int stringToInt(const char* str);
         std::string trim(const std::string& str);
         void processInputLine();
+        void checkExchangeRate(std::string& value, std::string& key);
+        double getExchangeRate(std::string& strDate) const;
 };
 
