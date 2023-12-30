@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:36 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/30 20:51:29 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2023/12/30 22:26:41 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int main(int ac, char *ag[])
       {
           std::string input(ag[i]);
           PmergeMe a(input);
+          a.makePair();
       }
     }
   }
