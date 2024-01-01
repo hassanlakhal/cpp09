@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:33 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/30 23:45:52 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/01 01:07:27 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include<vector>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 class PmergeMe
 {
@@ -24,6 +25,8 @@ class PmergeMe
     public:
         PmergeMe();
         PmergeMe(std::string& strArg);
+        PmergeMe(PmergeMe& other);
+        PmergeMe& operator=(PmergeMe& other);
         void loadContainer(std::string& strArg);
         void makePair();
         const std::vector<int>& getVector() const;
