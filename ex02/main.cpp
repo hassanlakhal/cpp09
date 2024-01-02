@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:36 by hlakhal-          #+#    #+#             */
-/*   Updated: 2024/01/02 01:54:47 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:01:31 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int main(int ac, char* ag[])
     std::deque<int> que;
     try 
     {
-        
         if (ac >= 2) 
         {
             for (int i = 1; i < ac; i++) 
@@ -30,30 +29,19 @@ int main(int ac, char* ag[])
             }
         }
         clock_t startTime = clock();
+        display(vect,"Before: ");
         vect1 = fordJohnson(vect);
-        std::vector<int>::iterator it = vect1.begin();
-        while (it != vect1.end())
-        {
-            std::cout << *it << " ";
-            it++;
-        } 
-        std::cout <<"\n";
+        display(vect1,"After:  ");
         clock_t endTime = clock();
-        double elapsedTime = static_cast<double>(endTime - startTime) * 1e6 / CLOCKS_PER_SEC;
-        std::cout << "time : "<< elapsedTime  << " s" << std::endl;
-        std::cout << "----------\n";
+        double elapsedTime = static_cast<double>(endTime - startTime)  / CLOCKS_PER_SEC;
+        std::cout << "Time to process a range of " << vect.size() ;
+        std::cout << " elements with std::vector : " << std::fixed << elapsedTime  << " s" << std::endl;
         startTime = clock();
         que = fordJohnson(que);
-        std::deque<int>::iterator it1 =  que.begin();
-        while (it1 !=  que.end())
-        {
-            std::cout << *it1 << " ";
-            it1++;
-        }
-        std::cout <<"\n";
         endTime = clock();
-        elapsedTime = static_cast<double>(endTime - startTime) * 1e6 / CLOCKS_PER_SEC;
-        std::cout << "time : "<< elapsedTime  << " s" << std::endl;
+        elapsedTime = static_cast<double>(endTime - startTime)  / CLOCKS_PER_SEC;
+        std::cout << "Time to process a range of " <<  que.size() ;
+        std::cout << " elements with std::deque : " << std::fixed << elapsedTime  << " s" << std::endl;
     } 
     catch (const std::exception& e) 
     {

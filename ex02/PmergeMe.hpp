@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:33 by hlakhal-          #+#    #+#             */
-/*   Updated: 2024/01/02 02:04:03 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/02 15:55:41 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,6 @@ void loadContainer(std::string& strArg, Container& sortA)
     }
 }
 
-template<typename Container>
-std::vector<std::pair<int, int> > makePairs(const Container& arr)
-{
-    std::vector<std::pair<int, int> > pairs;
-    for (size_t i = 0; i < arr.size(); i += 2)
-    {
-        if (i + 1 < arr.size())
-            pairs.push_back(std::make_pair(std::min(arr[i], arr[i + 1]), std::max(arr[i], arr[i + 1])));
-        else
-            pairs.push_back(std::make_pair(arr[i], arr[i]));
-    }
-    return pairs;
-}
 
 template<typename Container>
 Container merge(const Container& left, const Container& right)
@@ -121,20 +108,48 @@ void insertion(Container& sortedArr, int element)
 }
 
 template<typename Container>
-Container fordJohnson(const Container& arr)
+void makePairs(const Container& arr, Container& mainChainLeft, Container& mainChainRight)
 {
-    Container mainChainLeft;
-    std::vector<std::pair<int, int> > pairs = makePairs(arr);
+    std::vector<std::pair<int, int> > pairs;
+    size_t cont = arr.size() % 2 != 0 ? cont = arr.size() - 1 : cont = arr.size();
+    for (size_t i = 0; i < cont; i += 2)
+    {
+        if (i + 1 < arr.size())
+            pairs.push_back(std::make_pair(std::min(arr[i], arr[i + 1]), std::max(arr[i], arr[i + 1])));
+    }
+    if (arr.size() % 2 != 0)
+       mainChainLeft.push_back(arr[cont]);
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         mainChainLeft.push_back(pairs[i].first);
     }
-    Container mainChainRight = recursiveSort(mainChainLeft);
+    mainChainRight = recursiveSort(mainChainLeft);
     for (size_t i = 0; i < pairs.size(); ++i)
     {
         insertion(mainChainRight, pairs[i].second);
     }
+}
+
+template<typename Container>
+Container fordJohnson(const Container& arr)
+{
+    Container mainChainLeft;
+    Container mainChainRight;
+    makePairs(arr,mainChainLeft, mainChainRight);
     return mainChainRight;
+}
+
+template<typename Container>
+void display(Container& arr, std::string status)
+{
+    std::cout << status ;
+    typename Container::iterator it = arr.begin();
+    while (it != arr.end())
+    {
+        std::cout << *it << " ";
+        it++;
+    }
+    std::cout << std::endl;   
 }
 
 #endif
