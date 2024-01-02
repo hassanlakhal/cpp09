@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:33 by hlakhal-          #+#    #+#             */
-/*   Updated: 2024/01/01 23:09:53 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/02 02:04:03 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <utility>
 #include <iterator>
+#include <ctime>
 
 template<typename T>
 void loadContainer(T strArg)
@@ -64,44 +65,76 @@ std::vector<std::pair<int, int> > makePairs(const Container& arr)
         else
             pairs.push_back(std::make_pair(arr[i], arr[i]));
     }
-    sort(pairs.begin(), pairs.end());
     return pairs;
 }
 
 template<typename Container>
-Container recursiveSort(const std::vector<std::pair<int, int> >& pairs)
+Container merge(const Container& left, const Container& right)
 {
-    Container mainChain;
-    for (size_t i = 0; i < pairs.size(); ++i) 
+    Container result;
+    size_t i = 0, j = 0;
+
+    while (i < left.size() && j < right.size())
     {
-        mainChain.push_back(pairs[i].second);
+        if (left[i] < right[j])
+        {
+            result.push_back(left[i]);
+            ++i;
+        }
+        else
+        {
+            result.push_back(right[j]);
+            ++j;
+        }
     }
-    if (mainChain.size() > 1)
+    while (i < left.size())
     {
-        std::vector<std::pair<int, int> > newPairs = makePairs(mainChain);
-        return recursiveSort<Container>(newPairs);
+        result.push_back(left[i]);
+        ++i;
     }
-    else
-        return mainChain;
+    while (j < right.size())
+    {
+        result.push_back(right[j]);
+        ++j;
+    }
+    return result;
+}
+
+template<typename Container>
+Container recursiveSort(const Container& container)
+{
+    if (container.size() <= 1)
+        return container;
+    size_t middle = container.size() / 2;
+    Container left(container.begin(), container.begin() + middle);
+    Container right(container.begin() + middle, container.end());
+    left = recursiveSort(left);
+    right = recursiveSort(right);
+    return merge(left, right);
 }
 
 template<typename Container>
 void insertion(Container& sortedArr, int element)
 {
-    typename Container::iterator it = lower_bound(sortedArr.begin(), sortedArr.end(), element);
+    typename Container::iterator it = std::lower_bound(sortedArr.begin(), sortedArr.end(), element);
     sortedArr.insert(it, element);
 }
 
 template<typename Container>
 Container fordJohnson(const Container& arr)
 {
+    Container mainChainLeft;
     std::vector<std::pair<int, int> > pairs = makePairs(arr);
-    Container mainChain = recursiveSort<Container>(pairs);
-    for (size_t i = 0; i < arr.size(); ++i)
+    for (size_t i = 0; i < pairs.size(); ++i)
     {
-        insertion(mainChain, arr[i]);
+        mainChainLeft.push_back(pairs[i].first);
     }
-    return mainChain;
+    Container mainChainRight = recursiveSort(mainChainLeft);
+    for (size_t i = 0; i < pairs.size(); ++i)
+    {
+        insertion(mainChainRight, pairs[i].second);
+    }
+    return mainChainRight;
 }
 
 #endif
