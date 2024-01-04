@@ -6,13 +6,13 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/18 15:10:26 by hlakhal-          #+#    #+#             */
-/*   Updated: 2023/12/29 12:48:25 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/04 22:02:13 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"BitcoinExchange.hpp"
             
-BitcoinExchange::BitcoinExchange(const std::string& nameFile, char c) : nameFile(nameFile), c(c) 
+BitcoinExchange::BitcoinExchange(const std::string& nameFile) : nameFile(nameFile) 
 {
     
 }
@@ -42,13 +42,11 @@ void BitcoinExchange::loadBitcoinDatabase()
     {
         std::istringstream pairStream(line);
         std::string key, value;
-        if (std::getline(pairStream, key, this->c) && std::getline(pairStream, value))
+        if (std::getline(pairStream, key, ',') && std::getline(pairStream, value))
         {
             double result = std::strtod(value.c_str(), NULL);
-            data.insert(std::pair<std::string, double>(key,result));
+            data[key] = result;
         }
-        else
-            data.insert(std::pair<std::string, double>(key,-1));
     }
 }
 
@@ -104,15 +102,16 @@ bool BitcoinExchange::checkFormDate(const std::string& date)
             case 2:
                 if (dateForm[1] == 2)
                 {
-                    bool leap_year = ((dateForm[0] % 4 == 0 && dateForm[0] % 100 != 0) || dateForm[0] % 400 == 0);
+                    bool leap_year = ((dateForm[0] % 4 == 0 
+                        && dateForm[0] % 100 != 0) || dateForm[0] % 400 == 0);
                     if(leap_year && (dateForm[i] < 1 || dateForm[i] > 29))
                     {
-                         std::cout << "Error: Bad input for day in leap year =>" << date <<  std::endl;
+                         std::cout << "Error: Bad input => " << date <<  std::endl;
                          return false;
                     }
                     else if (!leap_year && (dateForm[i] < 1 || dateForm[i] > 28))
                     {
-                        std::cout << "Error: Bad input for day in non-leap year => " << date <<  std::endl;
+                        std::cout << "Error: Bad input  => " << date <<  std::endl;
                         return false;
                     }
                 }
@@ -121,7 +120,8 @@ bool BitcoinExchange::checkFormDate(const std::string& date)
                     std::cout << "Error : bad input => " << date <<  std::endl;
                     return false;
                 }
-                else if (((dateForm[i] < 1 || dateForm[i] > 30)) && std::find(std::begin(moths),std::end(moths),dateForm[i - 1]) != std::end(moths))
+                else if (((dateForm[i] < 1 || dateForm[i] > 30)) 
+                    && std::find(std::begin(moths),std::end(moths),dateForm[i - 1]) != std::end(moths))
                 {
                     std::cout << "Error : bad input => " << date <<  std::endl;
                     return false;
@@ -136,8 +136,7 @@ bool BitcoinExchange::checkFormDate(const std::string& date)
 
 double BitcoinExchange::getExchangeRate(std::string& strDate) const
 {
-    std::multimap<std::string, double>::const_iterator it = data.lower_bound(strDate);
-
+    std::map<std::string, double>::const_iterator it = data.lower_bound(strDate);
     if (it == data.begin())
         return it->second; 
     if (it == data.end() || (it->first != strDate && it != data.begin()))
@@ -155,23 +154,14 @@ void BitcoinExchange::checkExchangeRate(std::string& value, std::string& key)
     if (!checkFormDate(key))
         return ;
     if (*endPtr)
-    {
-        std::cout << "Error : bad input => " << key <<  std::endl;
-        return ;
-    }
-    else if (nbr > 10000 || res > 10000.00)
-    {
-        std::cout << "Error: too large a number." << std::endl;
-        return ;
-    }
-    else if (nbr < 0 || res < 0.0)
-    {
-        std::cout << "Error: not a positive number." << std::endl;
-        return ;
-    }
+         throw std::runtime_error (value);
+    else if (nbr > 10000 || res > 1e4)
+        throw std::invalid_argument("Error: too large a number.");
+    else if (nbr < 0 || res < 0e4)
+        throw std::invalid_argument("Error: not a positive number.");
     double exchangeRate =  getExchangeRate(key);
     double result = res * exchangeRate;
-    std::cout << key << " => " << res << " = " << result << std::endl;   
+    std::cout << key << " => " << res << " = " << result << std::endl;
 }
 
 std::string BitcoinExchange::trim(const std::string& str)
@@ -188,21 +178,38 @@ void BitcoinExchange::processInputLine(std::string& nameFile)
     std::ifstream fileData;
     fileData.open(nameFile);
     std::string data ,line;
+    while (std::getline(fileData,line) && !line.length()){}
+    if (line != "date | value")
+        throw std::runtime_error("error in form file");
     while (std::getline(fileData,line))
     {
-        std::istringstream pairStream(line);
-        std::string key, value;
-        if (std::getline(pairStream, key, '|') && std::getline(pairStream, value))
+        if (line.length())
         {
-            key = trim(key);
-            value = trim(value);
+            std::istringstream pairStream(line);
+            std::string key, value;
+            if (std::getline(pairStream, key, '|') && std::getline(pairStream, value))
+            {
+                key = trim(key);
+                value = trim(value);
+            }
+            else
+            {
+                key = trim(key);
+                value = "none";
+            }
+            try
+            {
+                checkExchangeRate(value, key); 
+            }
+            catch(const std::runtime_error& e)
+            {   
+                std::cerr << "Error : bad input " << e.what() << '\n';
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+            }
         }
-        else
-        {
-            key = trim(key);
-            value = "none";
-        }
-        checkExchangeRate(value, key);
     }
 }
 BitcoinExchange::~BitcoinExchange()
