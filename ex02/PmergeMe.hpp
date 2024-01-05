@@ -6,7 +6,7 @@
 /*   By: hlakhal- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/30 16:25:33 by hlakhal-          #+#    #+#             */
-/*   Updated: 2024/01/02 15:55:41 by hlakhal-         ###   ########.fr       */
+/*   Updated: 2024/01/02 16:28:32 by hlakhal-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void loadContainer(std::string& strArg, Container& sortA)
     std::istringstream ss(strArg);
     std::string number;
     long nb = 0;
+    if (strArg.empty())
+         throw std::runtime_error("empty argument !!");
     while (std::getline(ss, number, ' '))
     {
         loadContainer(number);
